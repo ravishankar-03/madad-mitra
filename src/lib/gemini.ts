@@ -1,8 +1,21 @@
 import { GoogleGenAI } from "@google/genai";
 
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || '' });
+const getAI = () => {
+  const apiKey = process.env.GEMINI_API_KEY;
+  if (!apiKey) {
+    console.warn("GEMINI_API_KEY is not set. AI features will not work.");
+    return null;
+  }
+  return new GoogleGenAI({ apiKey });
+};
+
+const ai = getAI();
 
 export async function extractNeedsFromText(text: string) {
+  if (!ai) {
+    console.error("Gemini API key is missing. Cannot perform extraction.");
+    return [];
+  }
   const prompt = `
     Analyze the following field report, survey, or interview snippet and extract community needs into a structured JSON format.
     
@@ -60,6 +73,10 @@ export async function extractNeedsFromText(text: string) {
 }
 
 export async function extractNeedsFromImage(base64Data: string, mimeType: string) {
+  if (!ai) {
+    console.error("Gemini API key is missing. Cannot perform extraction.");
+    return [];
+  }
   const prompt = `
     Extract community needs from this survey image or document.
     
