@@ -1,0 +1,11 @@
+{
+  "name": "Madad Mitra",
+  "description": "Madad Mitra (Assistance Friend) - An AI-driven crisis response and resource management platform for real-time field intelligence.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "AI-powered survey processing (OCR)",
+    "Urgent needs identification",
+    "Needs analysis dashboard",
+    "Resource database management"
+  ]
+}

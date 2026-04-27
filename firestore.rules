@@ -1,0 +1,67 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Default deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Helper functions
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isEmailVerified() {
+      return request.auth.token.email_verified == true;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    // Needs collection
+    match /needs/{needId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && isEmailVerified() && isValidNeed(incoming());
+      allow update: if isSignedIn() && isEmailVerified() && isValidNeed(incoming()) && (
+        // Allow status updates or confirmation
+        incoming().diff(existing()).affectedKeys().hasOnly(['status', 'resource_match', 'estimated_impact'])
+      );
+      allow delete: if false; // Only admins should delete, but let's disable for now
+    }
+
+    function isValidNeed(data) {
+      return data.type is string && data.type.size() <= 100 &&
+             data.urgency in ['Low', 'Medium', 'High', 'Critical'] &&
+             data.location is string && data.location.size() <= 200 &&
+             data.timestamp is string &&
+             data.status in ['Pending', 'Confirmed', 'Fulfilled'] &&
+             (data.get('lat', null) == null || data.lat is number) &&
+             (data.get('lng', null) == null || data.lng is number) &&
+             (data.get('ai_confidence', null) == null || data.ai_confidence is number) &&
+             (data.get('source_text', null) == null || data.source_text is string);
+    }
+
+    // Activities collection
+    match /activities/{activityId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && isEmailVerified() && isValidActivity(incoming());
+      allow update, delete: if false;
+    }
+
+    function isValidActivity(data) {
+      return data.type in ['survey_processed', 'need_flagged', 'location_validated', 'log_exported'] &&
+             data.description is string && data.description.size() <= 500 &&
+             data.timestamp is string &&
+             data.status in ['success', 'warning', 'info'];
+    }
+  }
+}
