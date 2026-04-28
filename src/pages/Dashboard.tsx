@@ -100,7 +100,7 @@ export default function Dashboard({ setActiveTab }: { setActiveTab: (tab: string
           <button className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 sm:px-6 py-2 bg-slate-950 dark:bg-indigo-600 text-white rounded-lg text-xs sm:text-sm font-bold hover:bg-slate-800 dark:hover:bg-indigo-500 transition-all shadow-md active:scale-95">
             <Plus size={14} className="sm:w-4 sm:h-4" />
             <span className="hidden xs:inline">NEW ALLOCATION</span>
-            <span className="xs:hidden">ALLOCATE</span>
+            <span className="xs:hidden">ALLOCATE VOLUNTEERS</span>
           </button>
         </div>
       </div>
