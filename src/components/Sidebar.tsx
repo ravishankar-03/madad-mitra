@@ -1,5 +1,5 @@
 import React from 'react';
-import { LayoutDashboard, FileText, Activity as ActivityIcon, Database, Download, Shield, LayoutGrid } from 'lucide-react';
+import { LayoutDashboard, FileText, Activity as ActivityIcon, Database, Download, Shield, LayoutGrid, Users, Building2, ListChecks } from 'lucide-react';
 import { cn } from '../lib/utils';
 
 interface SidebarProps {
@@ -11,9 +11,12 @@ export default function Sidebar({ activeTab, setActiveTab }: SidebarProps) {
   const menuItems = [
     { id: 'dashboard', icon: LayoutDashboard, label: 'Dashboard' },
     { id: 'upload', icon: FileText, label: 'Upload & OCR' },
+    { id: 'tasks', icon: ListChecks, label: 'Tasks'},
     { id: 'geospatial', icon: ActivityIcon, label: 'Geospatial View' },
     { id: 'needs', icon: ActivityIcon, label: 'Needs Analysis' },
     { id: 'database', icon: Database, label: 'Resource Database' },
+    { id: 'volunteers', icon: Users, label: 'Volunteers'},
+    { id: 'organizations', icon: Building2, label: 'Organizations'},
   ];
 
   const adminItems = [
